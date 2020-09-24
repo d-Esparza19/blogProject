@@ -14,7 +14,7 @@ var express = require("express"),
 
     var blogSchema = new mongoose.Schema({
         title: String,
-        image: {type: String, default: "https://flic.kr/p/cRB6Wj"},
+        image: {type: String, default: "https://cdn.pixabay.com/photo/2020/05/04/18/55/avocado-5130214__340.png"},
         body: String,
         created: {type: Date, default: Date.now}
     });
@@ -31,10 +31,9 @@ var express = require("express"),
             if(err){
                 console.log("error");
             }else{
-                res.render("index.ejs",{blogs: blogs});
+                res.render("index.ejs", {blogs: blogs});
             }
-        }
-            )
+        })
         
     });
 
