@@ -36,6 +36,24 @@ var express = require("express"),
         })
         
     });
+// New Route
+app.get("/blogs/new", (req, res)=>{
+    res.render("new.ejs");
+});
+// create route
+app.post("/blogs", (req, res)=>{
+    //create blog
+    Blog.create(req.body.blog, (err, newBlog)=>{
+        if(err){
+            console.log(err);
+            res.render("new.ejs");
+        }else{
+            //redirect
+            res.redirect("/blogs");
+        }
+    });
+   
+});
 
 
 //Routes
