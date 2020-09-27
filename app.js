@@ -55,6 +55,18 @@ app.post("/blogs", (req, res)=>{
    
 });
 
+//Show route
+app.get("/blogs/:id", (req, res)=>{
+    Blog.findById(req.params.id, (err, foundBlog)=>{
+        if(err){
+            console.log(err);
+            res.redirect("/blogs");
+        }else{
+            res.render("show.ejs", {blog: foundBlog});
+        }
+    });
+});
+
 
 //Routes
     const port = 3000
