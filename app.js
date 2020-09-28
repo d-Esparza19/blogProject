@@ -1,7 +1,9 @@
 var express = require("express"),
+    methodOverride = require("method-override");
     app = express(),
     bodyParser = require("body-parser"),
     mongoose = require("mongoose");
+
 
     //App Config
     mongoose.connect("mongodb://localhost:27017/restful_blog_app",{useNewUrlParser: true, useUnifiedTopology: true});
@@ -9,7 +11,7 @@ var express = require("express"),
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(express.static("public"));
     app.set('view enginge', 'ejs');
-   
+    app.use(methodOverride("_method"));
 
 
     var blogSchema = new mongoose.Schema({
@@ -67,6 +69,28 @@ app.get("/blogs/:id", (req, res)=>{
     });
 });
 
+//Edit route
+app.get("/blogs/:id/edit", (req, res)=>{
+    Blog.findById(req.params.id,(err, foundBlog)=>{
+        if(err){
+            console.log(err);
+            res.redirect("/blogs");
+        }else{
+            res.render("edit.ejs",{blog: foundBlog});
+        }
+    });
+});
+
+//Update Route
+app.put("/blogs/:id", (req,res)=>{
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog)=>{
+        if(err){
+            res.redirect("/blogs");
+        }else{
+            res.redirect("/blogs/" + req.params.id);
+        }
+    });
+});
 
 //Routes
     const port = 3000
