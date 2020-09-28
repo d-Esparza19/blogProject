@@ -1,7 +1,8 @@
 var express = require("express"),
-    methodOverride = require("method-override");
+    methodOverride = require("method-override"),
     app = express(),
     bodyParser = require("body-parser"),
+    expressSanitizer = require("express-sanitizer"),
     mongoose = require("mongoose");
 
 
@@ -11,6 +12,7 @@ var express = require("express"),
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(express.static("public"));
     app.set('view enginge', 'ejs');
+    app.use(expressSanitizer());
     app.use(methodOverride("_method"));
 
 
@@ -45,6 +47,7 @@ app.get("/blogs/new", (req, res)=>{
 // create route
 app.post("/blogs", (req, res)=>{
     //create blog
+    req.body.blog.body = req.sanitize(req.body.blog.body);
     Blog.create(req.body.blog, (err, newBlog)=>{
         if(err){
             console.log(err);
@@ -83,11 +86,23 @@ app.get("/blogs/:id/edit", (req, res)=>{
 
 //Update Route
 app.put("/blogs/:id", (req,res)=>{
+    req.body.blog.body = req.sanitize(req.body.blog.body);
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updatedBlog)=>{
         if(err){
             res.redirect("/blogs");
         }else{
             res.redirect("/blogs/" + req.params.id);
+        }
+    });
+});
+
+//delete Route
+app.delete("/blogs/:id",(req,res)=>{
+    Blog.findByIdAndRemove(req.params.id, function (err) {  
+        if(err){
+            res.redirect("/blogs");
+        }else{
+            res.redirect("/blogs");
         }
     });
 });

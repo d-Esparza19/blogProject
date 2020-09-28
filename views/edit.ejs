@@ -17,6 +17,11 @@
             </div>
             <input class="ui big black basic button"type="submit">
         </form>
+        <p></p>
+        <form  class="ui form" action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+            <button class="ui big red basic button">Delete</button>
+        </form>
+       
 </div>
 
 <%- include("partials/footer") %>
